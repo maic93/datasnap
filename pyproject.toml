@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "datasnap"
+version = "0.1.0"
+description = "Instant data profiling for CSV and JSON files — from the terminal"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+dependencies = [
+    "pandas>=2.0",
+    "rich>=13.0",
+    "plotext>=5.2",
+    "jinja2>=3.1",
+    "scipy>=1.11",
+]
+
+[project.scripts]
+datasnap = "datasnap.cli:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "ruff>=0.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=datasnap --cov-report=term-missing"
+
+[tool.ruff]
+line-length = 88
+target-version = "py39"
