@@ -29,7 +29,6 @@ dev = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--cov=datasnap --cov-report=term-missing"
 
 [tool.ruff]
 line-length = 88

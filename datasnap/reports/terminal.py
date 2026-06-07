@@ -1,11 +1,11 @@
-"""Pretty terminal output using the rich library."""
+"""Pretty terminal output using rich."""
 
 from __future__ import annotations
 
 import pandas as pd
 from rich.console import Console
-from rich.table import Table
 from rich.panel import Panel
+from rich.table import Table
 from rich import box
 from rich.text import Text
 
@@ -23,89 +23,75 @@ def print_report(
     console.print(
         Panel(
             f"[bold]{filename}[/bold]  "
-            f"[dim]{summary['rows']:,} rows × {summary['columns']} columns[/dim]",
+            f"[dim]{summary['rows']:,} rows × {summary['columns']} columns  "
+            f"missing overall: {summary['total_missing_pct']}%[/dim]",
             style="blue",
             expand=False,
         )
     )
-
     _print_column_table(summary["column_stats"])
-
     if quality:
-        _print_quality_panel(quality)
-
+        _print_quality(quality)
     if plot:
         _print_charts(df, summary)
 
 
 def _print_column_table(col_stats: list[dict]) -> None:
-    table = Table(
-        box=box.SIMPLE_HEAD,
-        show_header=True,
-        header_style="bold dim",
-        pad_edge=False,
-    )
+    table = Table(box=box.SIMPLE_HEAD, header_style="bold dim", pad_edge=False)
     table.add_column("column", style="bold", no_wrap=True)
     table.add_column("type", style="cyan")
     table.add_column("non-null", justify="right")
-    table.add_column("missing %", justify="right")
-    table.add_column("stats / top values", style="dim")
+    table.add_column("missing%", justify="right")
+    table.add_column("summary", style="dim")
 
     for c in col_stats:
-        missing_style = "red" if c["missing_pct"] > 20 else "yellow" if c["missing_pct"] > 5 else "green"
-        extra = _format_extra(c)
+        pct = c["missing_pct"]
+        color = "red" if pct > 20 else "yellow" if pct > 5 else "green"
         table.add_row(
             c["name"],
             c["type"],
             str(c["count"]),
-            Text(f"{c['missing_pct']}%", style=missing_style),
-            extra,
+            Text(f"{pct}%", style=color),
+            _format_summary(c),
         )
-
     console.print(table)
 
 
-def _format_extra(c: dict) -> str:
+def _format_summary(c: dict) -> str:
     t = c["type"]
     if t == "numeric":
         return f"mean={c.get('mean')}  min={c.get('min')}  max={c.get('max')}"
     if t == "categorical":
         tops = ", ".join(v["value"] for v in c.get("top_values", [])[:3])
-        return f"{c.get('unique')} unique  top: {tops}"
+        return f"{c.get('unique')} unique — {tops}"
     if t == "datetime":
         return f"{c.get('min_date')} → {c.get('max_date')}"
     return ""
 
 
-def _print_quality_panel(quality: dict) -> None:
+def _print_quality(quality: dict) -> None:
     score = quality["quality_score"]
     color = "green" if score >= 80 else "yellow" if score >= 60 else "red"
-
-    lines = [
-        f"[bold]Quality score: [{color}]{score}/100[/{color}][/bold]",
-        f"  Duplicate rows: {quality['duplicate_rows']['count']} ({quality['duplicate_rows']['pct']}%)",
-    ]
-
-    if quality["outlier_columns"] := quality.get("outliers"):
-        for o in quality["outlier_columns"]:
-            lines.append(f"  Outliers in [bold]{o['column']}[/bold]: {o['count']} rows ({o['pct']}%)")
-
+    lines = [f"[bold]Quality score: [{color}]{score}/100[/{color}][/bold]"]
+    d = quality["duplicate_rows"]
+    lines.append(f"  Duplicate rows : {d['count']} ({d['pct']}%)")
+    for o in quality.get("outliers", []):
+        lines.append(
+            f"  Outliers in [bold]{o['column']}[/bold]: {o['count']} rows ({o['pct']}%)"
+        )
     if quality.get("constant_columns"):
-        cols = ", ".join(quality["constant_columns"])
-        lines.append(f"  Constant columns: {cols}")
-
-    console.print(Panel("\n".join(lines), title="data quality", border_style=color, expand=False))
+        lines.append(f"  Constant cols  : {', '.join(quality['constant_columns'])}")
+    console.print(Panel("\n".join(lines), border_style=color, expand=False))
 
 
 def _print_charts(df: pd.DataFrame, summary: dict) -> None:
     try:
         import plotext as plt  # type: ignore
     except ImportError:
-        console.print("[yellow]Install plotext to see charts: pip install plotext[/yellow]")
+        console.print("[yellow]pip install plotext to enable charts[/yellow]")
         return
-
-    numeric_cols = [c for c in summary["column_stats"] if c["type"] == "numeric"]
-    for col_stat in numeric_cols[:3]:
+    numeric = [c for c in summary["column_stats"] if c["type"] == "numeric"]
+    for col_stat in numeric[:3]:
         col = col_stat["name"]
         values = df[col].dropna().tolist()
         if not values:
@@ -114,3 +100,7 @@ def _print_charts(df: pd.DataFrame, summary: dict) -> None:
         plt.hist(values, bins=20)
         plt.title(f"Distribution: {col}")
         plt.show()
+
+
+def print_diff_placeholder() -> None:
+    console.print(Panel("[dim]--diff mode coming on Day 12[/dim]", expand=False))

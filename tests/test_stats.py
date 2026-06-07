@@ -1,7 +1,6 @@
-"""Tests for the stats.summary module."""
+"""Tests for stats.summary."""
 
 from pathlib import Path
-
 from datasnap.loaders.detect import load_file
 from datasnap.stats.summary import compute_summary
 
@@ -15,26 +14,23 @@ def test_summary_shape():
     assert s["columns"] == 6
 
 
-def test_numeric_stats_present():
+def test_numeric_stats():
     df = load_file(FIXTURES / "sample.csv")
     s = compute_summary(df)
     salary = next(c for c in s["column_stats"] if c["name"] == "salary")
     assert salary["type"] == "numeric"
-    assert "mean" in salary
-    assert "min" in salary
-    assert "max" in salary
+    assert "mean" in salary and "min" in salary and "max" in salary
 
 
-def test_categorical_stats_present():
+def test_categorical_stats():
     df = load_file(FIXTURES / "sample.csv")
     s = compute_summary(df)
     dept = next(c for c in s["column_stats"] if c["name"] == "department")
     assert dept["type"] == "categorical"
-    assert "unique" in dept
-    assert "top_values" in dept
+    assert dept["unique"] == 3
 
 
-def test_missing_count():
+def test_missing_value():
     df = load_file(FIXTURES / "sample.csv")
     s = compute_summary(df)
     age = next(c for c in s["column_stats"] if c["name"] == "age")

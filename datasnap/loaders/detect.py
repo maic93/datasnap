@@ -11,11 +11,11 @@ SUPPORTED = {".csv", ".json", ".jsonl"}
 
 
 def load_file(path: Path) -> pd.DataFrame:
-    """Load a CSV or JSON file into a DataFrame."""
+    """Load a CSV or JSON/JSONL file into a DataFrame."""
     suffix = path.suffix.lower()
     if suffix not in SUPPORTED:
         raise ValueError(
-            f"Unsupported file type '{suffix}'. Supported: {', '.join(SUPPORTED)}"
+            f"Unsupported file type '{suffix}'. Supported: {', '.join(sorted(SUPPORTED))}"
         )
     if suffix == ".csv":
         return load_csv(path)

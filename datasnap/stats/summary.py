@@ -5,40 +5,34 @@ from __future__ import annotations
 import pandas as pd
 
 
-ColumnStat = dict[str, object]
-
-
 def compute_summary(df: pd.DataFrame) -> dict:
     """Return a full summary dict for the given DataFrame."""
-    columns: list[ColumnStat] = []
-
-    for col in df.columns:
-        series = df[col]
-        col_type = _infer_type(series)
-        stat: ColumnStat = {
-            "name": col,
-            "type": col_type,
-            "count": int(series.count()),
-            "missing": int(series.isna().sum()),
-            "missing_pct": round(series.isna().mean() * 100, 2),
-        }
-
-        if col_type == "numeric":
-            stat.update(_numeric_stats(series.dropna()))
-        elif col_type == "categorical":
-            stat.update(_categorical_stats(series))
-        elif col_type == "datetime":
-            stat.update(_datetime_stats(series))
-
-        columns.append(stat)
-
+    columns = [_column_stat(df[col]) for col in df.columns]
     return {
         "rows": len(df),
         "columns": len(df.columns),
-        "column_stats": columns,
         "total_missing": int(df.isna().sum().sum()),
         "total_missing_pct": round(df.isna().mean().mean() * 100, 2),
+        "column_stats": columns,
     }
+
+
+def _column_stat(series: pd.Series) -> dict:
+    col_type = _infer_type(series)
+    stat: dict = {
+        "name": series.name,
+        "type": col_type,
+        "count": int(series.count()),
+        "missing": int(series.isna().sum()),
+        "missing_pct": round(series.isna().mean() * 100, 2),
+    }
+    if col_type == "numeric":
+        stat.update(_numeric_stats(series.dropna()))
+    elif col_type == "categorical":
+        stat.update(_categorical_stats(series))
+    elif col_type == "datetime":
+        stat.update(_datetime_stats(series))
+    return stat
 
 
 def _infer_type(series: pd.Series) -> str:
@@ -46,7 +40,6 @@ def _infer_type(series: pd.Series) -> str:
         return "numeric"
     if pd.api.types.is_datetime64_any_dtype(series):
         return "datetime"
-    # Try to parse as datetime
     if series.dtype == object:
         try:
             pd.to_datetime(series.dropna().head(20), infer_datetime_format=True)
@@ -74,8 +67,7 @@ def _categorical_stats(s: pd.Series) -> dict:
     return {
         "unique": int(s.nunique()),
         "top_values": [
-            {"value": str(v), "count": int(c)}
-            for v, c in vc.head(5).items()
+            {"value": str(v), "count": int(c)} for v, c in vc.head(5).items()
         ],
     }
 

@@ -1,26 +1,25 @@
-"""Tests for the quality.checks module."""
+"""Tests for quality.checks."""
 
 from pathlib import Path
-
 from datasnap.loaders.detect import load_file
 from datasnap.quality.checks import run_quality_checks
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
 
-def test_detects_duplicate_rows():
+def test_detects_duplicates():
     df = load_file(FIXTURES / "sample.csv")
     q = run_quality_checks(df)
     assert q["duplicate_rows"]["count"] == 1
 
 
-def test_quality_score_between_0_and_100():
+def test_quality_score_range():
     df = load_file(FIXTURES / "sample.csv")
     q = run_quality_checks(df)
     assert 0 <= q["quality_score"] <= 100
 
 
-def test_outlier_report_is_list():
+def test_outliers_is_list():
     df = load_file(FIXTURES / "sample.csv")
     q = run_quality_checks(df)
     assert isinstance(q["outliers"], list)

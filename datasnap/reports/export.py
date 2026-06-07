@@ -1,4 +1,4 @@
-"""Export summary reports to various file formats."""
+"""Export reports to JSON and Markdown."""
 
 from __future__ import annotations
 
@@ -8,12 +8,11 @@ from pathlib import Path
 
 def save_report(output_path: str, summary: dict, quality: dict | None) -> None:
     path = Path(output_path)
-    suffix = path.suffix.lower()
-
     payload = {"summary": summary}
     if quality:
         payload["quality"] = quality
 
+    suffix = path.suffix.lower()
     if suffix == ".json":
         path.write_text(json.dumps(payload, indent=2, default=str))
     elif suffix == ".md":
@@ -26,29 +25,31 @@ def _to_markdown(summary: dict, quality: dict | None) -> str:
     lines = [
         "# datasnap report",
         "",
-        f"**Rows:** {summary['rows']:,}  **Columns:** {summary['columns']}  "
-        f"**Missing overall:** {summary['total_missing_pct']}%",
+        f"**Rows:** {summary['rows']:,} &nbsp; **Columns:** {summary['columns']} "
+        f"&nbsp; **Missing overall:** {summary['total_missing_pct']}%",
         "",
-        "## Column summary",
+        "## Columns",
         "",
-        "| Column | Type | Missing % | Stats |",
-        "|--------|------|-----------|-------|",
+        "| Column | Type | Missing% | Summary |",
+        "|--------|------|----------|---------|",
     ]
     for c in summary["column_stats"]:
-        extra = ""
+        summary_txt = ""
         if c["type"] == "numeric":
-            extra = f"mean={c.get('mean')}, max={c.get('max')}"
+            summary_txt = f"mean={c.get('mean')}, max={c.get('max')}"
         elif c["type"] == "categorical":
-            extra = f"{c.get('unique')} unique values"
-        lines.append(f"| {c['name']} | {c['type']} | {c['missing_pct']}% | {extra} |")
+            summary_txt = f"{c.get('unique')} unique"
+        lines.append(f"| {c['name']} | {c['type']} | {c['missing_pct']}% | {summary_txt} |")
 
     if quality:
         lines += [
             "",
             "## Quality",
             "",
-            f"**Score:** {quality['quality_score']}/100",
-            f"**Duplicate rows:** {quality['duplicate_rows']['count']}",
+            f"**Score:** {quality['quality_score']}/100  ",
+            f"**Duplicates:** {quality['duplicate_rows']['count']}  ",
         ]
+        for o in quality.get("outliers", []):
+            lines.append(f"**Outliers in `{o['column']}`:** {o['count']} rows  ")
 
     return "\n".join(lines) + "\n"
