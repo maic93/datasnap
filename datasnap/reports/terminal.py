@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from typing import Optional
 import pandas as pd
 
 
@@ -14,7 +15,7 @@ def print_report(
     filename: str,
     df: pd.DataFrame,
     summary: dict,
-    quality: dict | None,
+    quality: Optional[dict],
     plot: bool = False,
 ) -> None:
     from rich.panel import Panel

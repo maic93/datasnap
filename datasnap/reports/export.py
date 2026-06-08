@@ -1,12 +1,13 @@
 """Export reports to JSON and Markdown."""
 
 from __future__ import annotations
+from typing import Optional
 
 import json
 from pathlib import Path
 
 
-def save_report(output_path: str, summary: dict, quality: dict | None) -> None:
+def save_report(output_path: str, summary: dict, quality: Optional[dict]) -> None:
     path = Path(output_path)
     payload = {"summary": summary}
     if quality:
@@ -21,7 +22,7 @@ def save_report(output_path: str, summary: dict, quality: dict | None) -> None:
         raise ValueError(f"Unsupported output format '{suffix}'. Use .json or .md")
 
 
-def _to_markdown(summary: dict, quality: dict | None) -> str:
+def _to_markdown(summary: dict, quality: Optional[dict]) -> str:
     lines = [
         "# datasnap report",
         "",

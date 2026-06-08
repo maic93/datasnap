@@ -1,6 +1,9 @@
 """CSV file loader with validation and encoding detection."""
 
+from __future__ import annotations
+
 from pathlib import Path
+from typing import Optional
 
 import pandas as pd
 
@@ -8,11 +11,11 @@ import pandas as pd
 ENCODINGS = ["utf-8", "latin-1", "cp1252"]
 
 
-def load_csv(path: Path, delimiter: str | None = None) -> pd.DataFrame:
+def load_csv(path: Path, delimiter: Optional[str] = None) -> pd.DataFrame:
     """Load a CSV file into a DataFrame.
 
     Tries multiple encodings automatically.
-    Auto-detects delimiter if not provided (comma, semicolon, tab).
+    Auto-detects delimiter if not provided (comma, semicolon, tab, pipe).
 
     Args:
         path: Path to the CSV file.
@@ -25,7 +28,7 @@ def load_csv(path: Path, delimiter: str | None = None) -> pd.DataFrame:
         RuntimeError: If the file cannot be read.
         ValueError: If the file is empty or has no columns.
     """
-    last_exc: Exception | None = None
+    last_exc: Optional[Exception] = None
 
     for encoding in ENCODINGS:
         try:
@@ -69,6 +72,3 @@ def _validate(df: pd.DataFrame, path: Path) -> None:
         raise ValueError(f"'{path}' loaded as empty — no rows found.")
     if len(df.columns) == 0:
         raise ValueError(f"'{path}' has no columns.")
-    if len(df.columns) == 1 and df.shape[0] > 0:
-        # Might be wrong delimiter — warn but don't fail
-        pass
