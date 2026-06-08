@@ -12,10 +12,10 @@ $ datasnap sales.csv
  sales.csv  10,000 rows × 6 columns  missing overall: 1.2%
 
  column        type         non-null  missing%  summary
- ──────────────────────────────────────────────────────────────
+ ─────────────────────────────────────────────────────────────
  id            numeric       10000       0.0%   mean=5000 min=1 max=10000
  revenue       numeric        9876       1.2%   mean=4823 min=10 max=99999
- category      categorical   10000       0.0%   5 unique — Electronics, Tools, ...
+ category      categorical   10000       0.0%   5 unique — Electronics, Tools ...
  joined_date   categorical   10000       0.0%   ...
 
  Quality score: 87/100
@@ -65,7 +65,7 @@ datasnap data.csv --no-quality
 - Outlier detection — IQR-based flagging
 - Duplicate detection — exact row duplicates
 - Export reports — JSON and Markdown
-- Terminal charts — histograms and bar charts (coming Day 11)
+- Terminal charts — histograms and bar charts *(coming Day 11)*
 
 ## Development
 
@@ -75,11 +75,24 @@ pytest
 ruff check datasnap/
 ```
 
-## Roadmap
+## 14-day Roadmap
 
-- [x] Day 1: Project scaffold
-- [x] Day 2: CLI entry point
-- [ ] Day 3–14: See CLAUDE.md
+| Day | Date   | Task | Status |
+|-----|--------|------|--------|
+| 1  | Jun 6  | Project scaffold — pyproject.toml, folder structure | ✅ |
+| 2  | Jun 7  | CLI entry point with argparse, --help output | ✅ |
+| 3  | Jun 8  | CSV loader — encoding detection, delimiter sniffing | ✅ |
+| 4  | Jun 9  | JSON + JSONL loader, unified file-type detection | ⬜ |
+| 5  | Jun 10 | Column type inference (numeric / categorical / datetime) | ⬜ |
+| 6  | Jun 11 | Numeric stats: mean, std, min, max, quartiles | ⬜ |
+| 7  | Jun 12 | Categorical stats: value counts, top-N, unique count | ⬜ |
+| 8  | Jun 13 | Missing value report with % per column + rich table | ⬜ |
+| 9  | Jun 14 | Duplicate row detection and report | ⬜ |
+| 10 | Jun 15 | Outlier detection (IQR) + quality score 0–100 | ⬜ |
+| 11 | Jun 16 | Terminal charts: histogram + bar chart with plotext | ⬜ |
+| 12 | Jun 17 | Export report to JSON and Markdown (--output flag) | ⬜ |
+| 13 | Jun 18 | Full pytest suite — coverage for all modules | ⬜ |
+| 14 | Jun 19 | README rewrite, badges, tag v0.1.0 | ⬜ |
 
 ## License
 

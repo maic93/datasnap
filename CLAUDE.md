@@ -14,7 +14,7 @@ Users run `datasnap myfile.csv` and get stats, quality checks, and charts in the
 ### Week 1 — Foundation & core stats
 - [x] Day 1  Jun 6  Fri — Init repo, pyproject.toml, full folder structure
 - [x] Day 2  Jun 7  Sat — CLI entry point with argparse, --help output
-- [ ] Day 3  Jun 8  Sun — CSV loader with pandas, basic validation
+- [x] Day 3  Jun 8  Sun — CSV loader with pandas, basic validation
 - [ ] Day 4  Jun 9  Mon — JSON + JSONL loader, unified file-type detection
 - [ ] Day 5  Jun 10 Tue — Column type inference (numeric / categorical / datetime)
 - [ ] Day 6  Jun 11 Wed — Numeric stats: mean, std, min, max, quartiles

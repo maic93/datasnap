@@ -3,13 +3,11 @@
 from __future__ import annotations
 
 import pandas as pd
-from rich.console import Console
-from rich.panel import Panel
-from rich.table import Table
-from rich import box
-from rich.text import Text
 
-console = Console()
+
+def _console():
+    from rich.console import Console
+    return Console()
 
 
 def print_report(
@@ -19,6 +17,9 @@ def print_report(
     quality: dict | None,
     plot: bool = False,
 ) -> None:
+    from rich.panel import Panel
+
+    console = _console()
     console.print()
     console.print(
         Panel(
@@ -37,6 +38,11 @@ def print_report(
 
 
 def _print_column_table(col_stats: list[dict]) -> None:
+    from rich.table import Table
+    from rich import box
+    from rich.text import Text
+
+    console = _console()
     table = Table(box=box.SIMPLE_HEAD, header_style="bold dim", pad_edge=False)
     table.add_column("column", style="bold", no_wrap=True)
     table.add_column("type", style="cyan")
@@ -70,6 +76,9 @@ def _format_summary(c: dict) -> str:
 
 
 def _print_quality(quality: dict) -> None:
+    from rich.panel import Panel
+
+    console = _console()
     score = quality["quality_score"]
     color = "green" if score >= 80 else "yellow" if score >= 60 else "red"
     lines = [f"[bold]Quality score: [{color}]{score}/100[/{color}][/bold]"]
@@ -85,6 +94,7 @@ def _print_quality(quality: dict) -> None:
 
 
 def _print_charts(df: pd.DataFrame, summary: dict) -> None:
+    console = _console()
     try:
         import plotext as plt  # type: ignore
     except ImportError:
@@ -103,4 +113,5 @@ def _print_charts(df: pd.DataFrame, summary: dict) -> None:
 
 
 def print_diff_placeholder() -> None:
-    console.print(Panel("[dim]--diff mode coming on Day 12[/dim]", expand=False))
+    from rich.panel import Panel
+    _console().print(Panel("[dim]--diff mode coming on Day 12[/dim]", expand=False))
