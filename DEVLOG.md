@@ -28,3 +28,11 @@ Daily progress journal for `datasnap`.
 ---
 
 _Add one entry every day before committing._
+
+### Day 4 — Jun 9
+- Rewrote JSON loader with multi-strategy parsing (array, nested, flat dict)
+- Added JSONL support (newline-delimited JSON)
+- Added TSV support to detect.py (tab-separated files)
+- Added FileNotFoundError to detect.py
+- Added nested.json, sample.jsonl, sample.tsv fixtures
+- Expanded test suite: 14 tests across CSV, TSV, JSON, JSONL

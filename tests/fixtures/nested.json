@@ -1,0 +1,8 @@
+{
+  "meta": {"source": "test", "version": 1},
+  "data": [
+    {"id": 1, "name": "Alice", "score": 95.5},
+    {"id": 2, "name": "Bob", "score": 87.0},
+    {"id": 3, "name": "Carol", "score": 91.3}
+  ]
+}
