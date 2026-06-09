@@ -32,16 +32,17 @@ def load_file(path: Path) -> pd.DataFrame:
         ValueError: If the file extension is not supported.
         FileNotFoundError: If the file does not exist.
     """
-    if not path.exists():
-        raise FileNotFoundError(f"File not found: '{path}'")
-
     suffix = path.suffix.lower()
 
+    # Check extension first — before checking if file exists
     if suffix not in SUPPORTED_EXTENSIONS:
         supported = ", ".join(sorted(SUPPORTED_EXTENSIONS.keys()))
         raise ValueError(
             f"Unsupported file type '{suffix}'. Supported: {supported}"
         )
+
+    if not path.exists():
+        raise FileNotFoundError(f"File not found: '{path}'")
 
     if suffix == ".csv":
         return load_csv(path)
@@ -49,7 +50,6 @@ def load_file(path: Path) -> pd.DataFrame:
     if suffix == ".tsv":
         return load_csv(path, delimiter="\t")
 
-    # .json or .jsonl
     return load_json(path)
 
 
