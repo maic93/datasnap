@@ -72,7 +72,6 @@ def _load_json(path: Path, orient: Optional[str]) -> pd.DataFrame:
 
 def _normalise(data: object, path: Path) -> pd.DataFrame:
     """Turn common JSON shapes into a DataFrame."""
-    from pandas import json_normalize
 
     if isinstance(data, list):
         return pd.DataFrame(data)
