@@ -36,3 +36,14 @@ _Add one entry every day before committing._
 - Added FileNotFoundError to detect.py
 - Added nested.json, sample.jsonl, sample.tsv fixtures
 - Expanded test suite: 14 tests across CSV, TSV, JSON, JSONL
+
+### Day 5 — Jun 10
+- Created `datasnap/stats/inference.py` — column type inference engine
+- Detects: numeric, categorical, boolean, datetime, unknown
+- Handles string/object dtype difference in newer pandas versions
+- Low-cardinality integer columns correctly typed as categorical
+- Boolean detection: True/False, yes/no, 1/0, y/n
+- Datetime detection via regex patterns + pandas fallback parser
+- Added `infer_all_columns()` and `columns_by_type()` helpers
+- Wired inference into `summary.py` replacing old `_infer_type()`
+- Added 14 new tests in `tests/test_inference.py`
