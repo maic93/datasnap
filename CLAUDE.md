@@ -17,7 +17,7 @@ Users run `datasnap myfile.csv` and get stats, quality checks, and charts in the
 - [x] Day 3  Jun 8  Sun — CSV loader with pandas, basic validation
 - [x] Day 4  Jun 9  Mon — JSON + JSONL loader, unified file-type detection
 - [x] Day 5  Jun 10 Tue — Column type inference (numeric / categorical / datetime)
-- [ ] Day 6  Jun 11 Wed — Numeric stats: mean, std, min, max, quartiles
+- [x] Day 6  Jun 11 Wed — Numeric stats: mean, std, min, max, quartiles
 - [ ] Day 7  Jun 12 Thu — Categorical stats: value counts, top-N, unique count
 
 ### Week 2 — Quality, charts & export

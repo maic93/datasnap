@@ -7,6 +7,7 @@ from typing import List
 import pandas as pd
 
 from datasnap.stats.inference import infer_column_type
+from datasnap.stats.numeric import numeric_stats, summarise_numeric
 
 
 def compute_summary(df: pd.DataFrame) -> dict:
@@ -40,26 +41,17 @@ def _column_stat(series: pd.Series) -> dict:
         "missing_pct": round(series.isna().mean() * 100, 2),
     }
     if col_type == "numeric":
-        stat.update(_numeric_stats(series.dropna()))
+        stat.update(numeric_stats(series))
+        stat["summary"] = summarise_numeric(series)
     elif col_type in ("categorical", "boolean"):
         stat.update(_categorical_stats(series))
+        stat["summary"] = _summarise_categorical(series)
     elif col_type == "datetime":
         stat.update(_datetime_stats(series))
+        stat["summary"] = _summarise_datetime(series)
+    else:
+        stat["summary"] = "—"
     return stat
-
-
-def _numeric_stats(s: pd.Series) -> dict:
-    """Descriptive statistics for numeric columns."""
-    q1, median, q3 = s.quantile([0.25, 0.5, 0.75])
-    return {
-        "mean": round(float(s.mean()), 4),
-        "std": round(float(s.std()), 4),
-        "min": round(float(s.min()), 4),
-        "max": round(float(s.max()), 4),
-        "q1": round(float(q1), 4),
-        "median": round(float(median), 4),
-        "q3": round(float(q3), 4),
-    }
 
 
 def _categorical_stats(s: pd.Series) -> dict:
@@ -73,11 +65,22 @@ def _categorical_stats(s: pd.Series) -> dict:
     }
 
 
+def _summarise_categorical(s: pd.Series) -> str:
+    unique = s.nunique()
+    top = s.value_counts().index[0] if len(s.dropna()) > 0 else "—"
+    return f"{unique} unique  top: {top}"
+
+
 def _datetime_stats(s: pd.Series) -> dict:
     """Date range and unique count for datetime columns."""
-    parsed = pd.to_datetime(s, errors="coerce")
+    parsed = pd.to_datetime(s, errors="coerce", format="mixed")
     return {
         "min_date": str(parsed.min()),
         "max_date": str(parsed.max()),
         "unique": int(parsed.nunique()),
     }
+
+
+def _summarise_datetime(s: pd.Series) -> str:
+    parsed = pd.to_datetime(s, errors="coerce", format="mixed")
+    return f"{parsed.min().date()} → {parsed.max().date()}"

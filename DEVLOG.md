@@ -47,3 +47,12 @@ _Add one entry every day before committing._
 - Added `infer_all_columns()` and `columns_by_type()` helpers
 - Wired inference into `summary.py` replacing old `_infer_type()`
 - Added 14 new tests in `tests/test_inference.py`
+
+### Day 6 — Jun 11
+- Created `datasnap/stats/numeric.py` — dedicated numeric stats module
+- Stats: count, mean, std, variance, min, max, range, q1, median, q3, iqr, skewness, kurtosis
+- Added `numeric_stats_all()` to compute stats for all numeric cols in a DataFrame
+- Added `summarise_numeric()` for one-line human-readable summary
+- Updated `summary.py` to use new numeric module + added summary string per column
+- Added datetime summary formatting (date range)
+- 15 new tests in `tests/test_numeric.py`

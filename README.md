@@ -84,7 +84,7 @@ ruff check datasnap/
 | 3  | Jun 8  | CSV loader — encoding detection, delimiter sniffing | ✅ |
 | 4  | Jun 9  | JSON + JSONL loader, unified file-type detection | ✅ |
 | 5  | Jun 10 | Column type inference (numeric / categorical / datetime) | ✅ |
-| 6  | Jun 11 | Numeric stats: mean, std, min, max, quartiles | ⬜ |
+| 6  | Jun 11 | Numeric stats: mean, std, min, max, quartiles | ✅ |
 | 7  | Jun 12 | Categorical stats: value counts, top-N, unique count | ⬜ |
 | 8  | Jun 13 | Missing value report with % per column + rich table | ⬜ |
 | 9  | Jun 14 | Duplicate row detection and report | ⬜ |
