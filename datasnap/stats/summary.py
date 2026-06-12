@@ -8,6 +8,7 @@ import pandas as pd
 
 from datasnap.stats.inference import infer_column_type
 from datasnap.stats.numeric import numeric_stats, summarise_numeric
+from datasnap.stats.categorical import categorical_stats, summarise_categorical
 
 
 def compute_summary(df: pd.DataFrame) -> dict:
@@ -44,8 +45,8 @@ def _column_stat(series: pd.Series) -> dict:
         stat.update(numeric_stats(series))
         stat["summary"] = summarise_numeric(series)
     elif col_type in ("categorical", "boolean"):
-        stat.update(_categorical_stats(series))
-        stat["summary"] = _summarise_categorical(series)
+        stat.update(categorical_stats(series))
+        stat["summary"] = summarise_categorical(series)
     elif col_type == "datetime":
         stat.update(_datetime_stats(series))
         stat["summary"] = _summarise_datetime(series)
@@ -54,25 +55,7 @@ def _column_stat(series: pd.Series) -> dict:
     return stat
 
 
-def _categorical_stats(s: pd.Series) -> dict:
-    """Value counts and unique count for categorical/boolean columns."""
-    vc = s.value_counts()
-    return {
-        "unique": int(s.nunique()),
-        "top_values": [
-            {"value": str(v), "count": int(c)} for v, c in vc.head(5).items()
-        ],
-    }
-
-
-def _summarise_categorical(s: pd.Series) -> str:
-    unique = s.nunique()
-    top = s.value_counts().index[0] if len(s.dropna()) > 0 else "—"
-    return f"{unique} unique  top: {top}"
-
-
 def _datetime_stats(s: pd.Series) -> dict:
-    """Date range and unique count for datetime columns."""
     parsed = pd.to_datetime(s, errors="coerce", format="mixed")
     return {
         "min_date": str(parsed.min()),

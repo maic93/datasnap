@@ -56,3 +56,13 @@ _Add one entry every day before committing._
 - Updated `summary.py` to use new numeric module + added summary string per column
 - Added datetime summary formatting (date range)
 - 15 new tests in `tests/test_numeric.py`
+
+### Day 7 — Jun 12
+- Created `datasnap/stats/categorical.py` — dedicated categorical stats module
+- Stats: count, unique, mode, mode_count, mode_pct, top_values, least_common, cardinality_ratio
+- Added `categorical_stats_all()` for all categorical/boolean columns in a DataFrame
+- Added `summarise_categorical()` for one-line human-readable summary
+- Added `value_counts_table()` for sorted frequency table with percentages
+- Updated `summary.py` to use new categorical module
+- 19 new tests in `tests/test_categorical.py`
+- Fixed README Day 4 checkbox (was missing ✅)
