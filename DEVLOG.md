@@ -66,3 +66,14 @@ _Add one entry every day before committing._
 - Updated `summary.py` to use new categorical module
 - 19 new tests in `tests/test_categorical.py`
 - Fixed README Day 4 checkbox (was missing ✅)
+
+### Day 8 — Jun 13
+- Created `datasnap/stats/missing.py` — missing value analysis module
+- Per-column: missing count, pct, severity (none/low/medium/high/critical)
+- Results sorted by missing count descending
+- Added `missing_summary_line()` for one-line human-readable summary
+- Rewrote `reports/terminal.py` with full rich table:
+  - Column index, name, type, non-null count, colour-coded missing%, summary
+  - Separate missing value breakdown table when data has gaps
+  - Green ✓ when dataset is complete
+- 15 new tests in `tests/test_missing.py`

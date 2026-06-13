@@ -21,7 +21,7 @@ Users run `datasnap myfile.csv` and get stats, quality checks, and charts in the
 - [x] Day 7  Jun 12 Thu — Categorical stats: value counts, top-N, unique count
 
 ### Week 2 — Quality, charts & export
-- [ ] Day 8  Jun 13 Fri — Missing value report with % per column + rich table output
+- [x] Day 8  Jun 13 Fri — Missing value report with % per column + rich table output
 - [ ] Day 9  Jun 14 Sat — Duplicate row detection and report
 - [ ] Day 10 Jun 15 Sun — Outlier detection via IQR + quality score (0–100)
 - [ ] Day 11 Jun 16 Mon — Terminal charts: histogram + bar chart with plotext

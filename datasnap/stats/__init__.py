@@ -7,6 +7,7 @@ from datasnap.stats.categorical import (
     summarise_categorical,
     value_counts_table,
 )
+from datasnap.stats.missing import missing_report, missing_summary_line
 
 __all__ = [
     "compute_summary",
@@ -20,4 +21,6 @@ __all__ = [
     "categorical_stats_all",
     "summarise_categorical",
     "value_counts_table",
+    "missing_report",
+    "missing_summary_line",
 ]
