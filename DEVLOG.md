@@ -77,3 +77,14 @@ _Add one entry every day before committing._
   - Separate missing value breakdown table when data has gaps
   - Green ✓ when dataset is complete
 - 15 new tests in `tests/test_missing.py`
+
+### Day 9 — Jun 14
+- Created `datasnap/quality/duplicates.py` — dedicated duplicate detection module
+- `duplicate_report()`: count, pct, severity, indices, sample rows
+- `find_duplicate_groups()`: groups all rows that are duplicates of each other
+- `duplicate_summary_line()`: one-line human-readable summary
+- Supports `subset` parameter to check duplicates on specific columns
+- Severity: none / low / medium / high / critical
+- Updated `checks.py` to use new duplicate module
+- Updated `quality/__init__.py` exports
+- 20 new tests in `tests/test_duplicates.py`
