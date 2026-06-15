@@ -1,10 +1,12 @@
-"""Data quality checks: duplicates, outliers, constant columns, quality score."""
+"""Data quality checks — main entry point."""
 
 from __future__ import annotations
 
 import pandas as pd
 
 from datasnap.quality.duplicates import duplicate_report
+from datasnap.quality.outliers import outlier_report
+from datasnap.quality.score import compute_quality_score
 
 
 def run_quality_checks(df: pd.DataFrame) -> dict:
@@ -17,9 +19,9 @@ def run_quality_checks(df: pd.DataFrame) -> dict:
         Dict with duplicate, outlier, constant column info, and quality score.
     """
     dupes = duplicate_report(df)
-    outliers = _check_outliers(df)
+    outliers = outlier_report(df)
     constants = _check_constant_columns(df)
-    score = _compute_score(df, dupes, outliers, constants)
+    score_result = compute_quality_score(df)
 
     return {
         "duplicate_rows": {
@@ -30,48 +32,12 @@ def run_quality_checks(df: pd.DataFrame) -> dict:
         },
         "outliers": outliers,
         "constant_columns": constants,
-        "quality_score": score,
+        "quality_score": score_result["total"],
+        "quality_grade": score_result["grade"],
+        "quality_breakdown": score_result["dimensions"],
     }
-
-
-def _check_outliers(df: pd.DataFrame) -> list:
-    """IQR-based outlier detection for numeric columns."""
-    results = []
-    for col in df.select_dtypes(include="number").columns:
-        s = df[col].dropna()
-        if len(s) < 4:
-            continue
-        q1, q3 = s.quantile(0.25), s.quantile(0.75)
-        iqr = q3 - q1
-        if iqr == 0:
-            continue
-        lower, upper = q1 - 1.5 * iqr, q3 + 1.5 * iqr
-        n = int(((s < lower) | (s > upper)).sum())
-        if n > 0:
-            results.append({
-                "column": col,
-                "count": n,
-                "pct": round(n / len(s) * 100, 2),
-                "lower_bound": round(float(lower), 4),
-                "upper_bound": round(float(upper), 4),
-            })
-    return results
 
 
 def _check_constant_columns(df: pd.DataFrame) -> list:
     """Return columns with only one unique non-null value."""
     return [col for col in df.columns if df[col].dropna().nunique() <= 1]
-
-
-def _compute_score(
-    df: pd.DataFrame,
-    dupes: dict,
-    outliers: list,
-    constants: list,
-) -> int:
-    score = 100.0
-    score -= min(30, df.isna().mean().mean() * 100 * 2)
-    score -= min(20, dupes["duplicate_pct"] * 2)
-    score -= min(20, sum(o["pct"] for o in outliers))
-    score -= min(10, len(constants) * 5)
-    return max(0, round(score))

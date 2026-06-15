@@ -88,7 +88,7 @@ ruff check datasnap/
 | 7  | Jun 12 | Categorical stats: value counts, top-N, unique count | ✅ |
 | 8  | Jun 13 | Missing value report with % per column + rich table | ✅ |
 | 9  | Jun 14 | Duplicate row detection and report | ✅ |
-| 10 | Jun 15 | Outlier detection (IQR) + quality score 0–100 | ⬜ |
+| 10 | Jun 15 | Outlier detection (IQR) + quality score 0–100 | ✅ |
 | 11 | Jun 16 | Terminal charts: histogram + bar chart with plotext | ⬜ |
 | 12 | Jun 17 | Export report to JSON and Markdown (--output flag) | ⬜ |
 | 13 | Jun 18 | Full pytest suite — coverage for all modules | ⬜ |

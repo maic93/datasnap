@@ -88,3 +88,14 @@ _Add one entry every day before committing._
 - Updated `checks.py` to use new duplicate module
 - Updated `quality/__init__.py` exports
 - 20 new tests in `tests/test_duplicates.py`
+
+### Day 10 — Jun 15
+- Created `datasnap/quality/outliers.py` — IQR and Z-score outlier detection
+- Per-column: count, pct, bounds, min/max outlier value, indices
+- Supports `method='iqr'` (default) and `method='zscore'`
+- Results sorted by outlier count descending
+- Created `datasnap/quality/score.py` — detailed quality score (0–100)
+- 4 dimensions: completeness (40pts), uniqueness (25pts), consistency (20pts), validity (15pts)
+- Grade system: A/B/C/D/F with labels (Excellent/Good/Fair/Poor/Critical)
+- Updated `checks.py` to expose grade and breakdown in quality report
+- 22 new tests in `tests/test_outliers.py`
