@@ -99,3 +99,16 @@ _Add one entry every day before committing._
 - Grade system: A/B/C/D/F with labels (Excellent/Good/Fair/Poor/Critical)
 - Updated `checks.py` to expose grade and breakdown in quality report
 - 22 new tests in `tests/test_outliers.py`
+
+### Day 11 — Jun 16
+- Created `datasnap/charts/terminal.py` — terminal charts module
+- `plot_histogram()`: distribution chart for numeric columns (plotext)
+- `plot_bar_chart()`: value count bars for categorical columns, horizontal by default
+- `plot_all_numeric()`: histograms for all numeric cols, configurable max
+- `plot_all_categorical()`: bar charts for all categorical cols
+- `plot_summary()`: combined overview — numeric then categorical charts
+- Graceful degradation when plotext not installed (prints install hint)
+- Updated `reports/terminal.py` to use new charts module via `--plot` flag
+- Updated quality panel to show score breakdown by dimension
+- Tests use unittest.mock to avoid plotext as a hard test dependency
+- 12 new tests in `tests/test_charts.py`

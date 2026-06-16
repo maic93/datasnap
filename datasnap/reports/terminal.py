@@ -25,9 +25,12 @@ def print_report(
     console = _console()
     console.print()
 
-    # Header panel
-    missing_line = f"[yellow]{summary['total_missing_pct']}% missing[/yellow]" \
-        if summary['total_missing_pct'] > 0 else "[green]no missing[/green]"
+    missing_pct = summary['total_missing_pct']
+    missing_line = (
+        f"[yellow]{missing_pct}% missing[/yellow]"
+        if missing_pct > 0
+        else "[green]no missing[/green]"
+    )
 
     console.print(Panel(
         f"[bold white]{filename}[/bold white]  "
@@ -37,23 +40,18 @@ def print_report(
         expand=False,
     ))
 
-    # Column stats table
     _print_column_table(summary["column_stats"])
-
-    # Missing value report
     _print_missing_report(df)
 
-    # Quality panel
     if quality:
         _print_quality(quality)
 
-    # Charts
     if plot:
-        _print_charts(df, summary)
+        from datasnap.charts.terminal import plot_summary
+        plot_summary(df)
 
 
 def _print_column_table(col_stats: list) -> None:
-    """Print the main column summary table."""
     from rich.table import Table
     from rich import box
     from rich.text import Text
@@ -96,7 +94,6 @@ def _print_column_table(col_stats: list) -> None:
 
 
 def _print_missing_report(df: pd.DataFrame) -> None:
-    """Print missing value breakdown if any columns have missing data."""
     from datasnap.stats.missing import missing_report, missing_summary_line
     from rich.table import Table
     from rich import box
@@ -109,10 +106,8 @@ def _print_missing_report(df: pd.DataFrame) -> None:
         console.print(f"  [green]✓[/green] [dim]{missing_summary_line(df)}[/dim]\n")
         return
 
-    # Summary line
     console.print(f"\n  [yellow]Missing values:[/yellow] {missing_summary_line(df)}")
 
-    # Per-column breakdown table
     table = Table(box=box.SIMPLE, pad_edge=False, show_header=True, header_style="dim")
     table.add_column("column", style="bold")
     table.add_column("missing", justify="right")
@@ -143,16 +138,19 @@ def _print_missing_report(df: pd.DataFrame) -> None:
 
 
 def _print_quality(quality: dict) -> None:
-    """Print quality score panel."""
     from rich.panel import Panel
 
     console = _console()
     score = quality["quality_score"]
+    grade = quality.get("quality_grade", "")
     color = "green" if score >= 80 else "yellow" if score >= 60 else "red"
 
-    lines = [f"[bold]Quality score: [{color}]{score}/100[/{color}][/bold]"]
+    lines = [
+        f"[bold]Quality score: [{color}]{score}/100 ({grade})[/{color}][/bold]"
+    ]
     d = quality["duplicate_rows"]
     lines.append(f"  Duplicate rows : {d['count']} ({d['pct']}%)")
+
     for o in quality.get("outliers", []):
         lines.append(
             f"  Outliers in [bold]{o['column']}[/bold]: "
@@ -161,28 +159,14 @@ def _print_quality(quality: dict) -> None:
     if quality.get("constant_columns"):
         lines.append(f"  Constant cols  : {', '.join(quality['constant_columns'])}")
 
+    if "quality_breakdown" in quality:
+        dims = quality["quality_breakdown"]
+        lines.append("")
+        lines.append("  [dim]Breakdown:[/dim]")
+        for name, d in dims.items():
+            lines.append(f"  [dim]  {name:14} {d['score']:5.1f}/{d['max']}[/dim]")
+
     console.print(Panel("\n".join(lines), border_style=color, expand=False))
-
-
-def _print_charts(df: pd.DataFrame, summary: dict) -> None:
-    """Print terminal charts using plotext."""
-    console = _console()
-    try:
-        import plotext as plt  # type: ignore
-    except ImportError:
-        console.print("[yellow]pip install plotext to enable charts[/yellow]")
-        return
-
-    numeric = [c for c in summary["column_stats"] if c["type"] == "numeric"]
-    for col_stat in numeric[:3]:
-        col = col_stat["name"]
-        values = df[col].dropna().tolist()
-        if not values:
-            continue
-        plt.clf()
-        plt.hist(values, bins=20)
-        plt.title(f"Distribution: {col}")
-        plt.show()
 
 
 def print_diff_placeholder() -> None:
