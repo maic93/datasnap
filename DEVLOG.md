@@ -112,3 +112,12 @@ _Add one entry every day before committing._
 - Updated quality panel to show score breakdown by dimension
 - Tests use unittest.mock to avoid plotext as a hard test dependency
 - 12 new tests in `tests/test_charts.py`
+
+### Day 12 — Jun 17
+- Rewrote `datasnap/reports/export.py` — full JSON/Markdown export
+- JSON report includes generated_at timestamp and source filename
+- Markdown report has header, quality section, and per-column table
+- Added `load_report()` to read back a saved JSON report
+- Updated `cli.py` to pass source filename into save_report and confirm save path
+- Updated `reports/__init__.py` exports
+- 15 new tests in `tests/test_export.py`

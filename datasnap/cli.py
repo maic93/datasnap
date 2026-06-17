@@ -70,9 +70,9 @@ def main() -> None:
 
         if args.output:
             from datasnap.reports.export import save_report
-            save_report(args.output, summary, quality)
+            saved_path = save_report(args.output, summary, quality, filename=path.name)
             from rich.console import Console
-            Console().print(f"\n[green]✓[/green] Report saved to {args.output}")
+            Console().print(f"\n[green]✓[/green] Report saved to {saved_path}")
 
 
 if __name__ == "__main__":
