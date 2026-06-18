@@ -91,7 +91,7 @@ ruff check datasnap/
 | 10 | Jun 15 | Outlier detection (IQR) + quality score 0–100 | ✅ |
 | 11 | Jun 16 | Terminal charts: histogram + bar chart with plotext | ✅ |
 | 12 | Jun 17 | Export report to JSON and Markdown (--output flag) | ✅ |
-| 13 | Jun 18 | Full pytest suite — coverage for all modules | ⬜ |
+| 13 | Jun 18 | Full pytest suite — coverage for all modules | ✅ |
 | 14 | Jun 19 | README rewrite, badges, tag v0.1.0 | ⬜ |
 
 ## License

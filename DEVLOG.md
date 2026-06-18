@@ -121,3 +121,14 @@ _Add one entry every day before committing._
 - Updated `cli.py` to pass source filename into save_report and confirm save path
 - Updated `reports/__init__.py` exports
 - 15 new tests in `tests/test_export.py`
+
+### Day 13 — Jun 18
+- Added `tests/test_cli.py` — full CLI integration tests via subprocess
+  - --help, --version, --no-quality, --output (json/md), --diff, multiple files
+- Added `tests/test_quality_checks.py` — integration tests for run_quality_checks()
+  - structure validation, score/breakdown consistency, grade boundaries
+- Added `tests/test_edge_cases.py` — cross-module edge case coverage
+  - single row/column, all-missing columns, unicode, special chars, quoted CSV
+  - negative/large/small numbers, mixed int/float, full pipeline smoke tests
+- Total test count now significantly higher across all modules
+- Full coverage achieved for loaders, stats, quality, charts, reports, and CLI

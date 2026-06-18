@@ -25,8 +25,8 @@ Users run `datasnap myfile.csv` and get stats, quality checks, and charts in the
 - [x] Day 9  Jun 14 Sat — Duplicate row detection and report
 - [ ] Day 10 Jun 15 Sun — Outlier detection via IQR + quality score (0–100)
 - [x] Day 11 Jun 16 Mon — Terminal charts: histogram + bar chart with plotext
-- [ ] Day 12 Jun 17 Tue — Export report to JSON and Markdown with --output flag
-- [ ] Day 13 Jun 18 Wed — pytest suite: full test coverage for all modules
+- [x] Day 12 Jun 17 Tue — Export report to JSON and Markdown with --output flag
+- [x] Day 13 Jun 18 Wed — pytest suite: full test coverage for all modules
 - [ ] Day 14 Jun 19 Thu — README rewrite, badges, usage GIF placeholder, tag v0.1.0
 
 ## How to implement each task
