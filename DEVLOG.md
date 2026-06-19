@@ -132,3 +132,13 @@ _Add one entry every day before committing._
   - negative/large/small numbers, mixed int/float, full pipeline smoke tests
 - Total test count now significantly higher across all modules
 - Full coverage achieved for loaders, stats, quality, charts, reports, and CLI
+
+### Day 14 — Jun 19
+- Full README rewrite: feature descriptions, project structure, contributing section
+- Added CI badge linking to GitHub Actions
+- Completed 14-day roadmap table with all days marked done
+- Confirmed version 0.1.0 in pyproject.toml is release-ready
+- Tagged v0.1.0
+
+This closes the 14-day datasnap build. Started Jun 6, finished Jun 19 —
+one feature shipped and committed every single day.
